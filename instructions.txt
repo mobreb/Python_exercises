@@ -1,0 +1,27 @@
+1. File_operations_students.py
+
+- The program should take student's name, surname and group.
+
+- Information are to be stored in a .txt file
+
+- Information can be added, deleted and displayed (identification by surname)
+
+- Ability to add grades and average to be displayed along with student's information when prompted
+
+2. Dat_operations_company.py
+
+- Operations based on 3 modules to manage companies, employees and employment
+
+- Ability to add company, remove company from the database and display company information
+
+- Ability to add employee, delete employee and display employee information
+
+- Ability to assign a company to an employee, remove a company from an employee, display site of employment
+
+- Deleting a company should not be possible if any of the employees are assigned to it
+
+- Deleting an employee from a database should not be possible if it is assigned employment
+
+3. GUI_calculator
+
+- A simple calculator enabling multiple computations until the data is erased
