@@ -29,6 +29,19 @@
 - A simple calculator enabling multiple computations until the data is erased
 
 
-4. 
+4. Object_clinic
 
 - The application is to collect information about clinics, their patients and sicknesses of the patients
+
+- A two-step menu enabling to access Patient's and Clinic's information
+
+
+5. Object_courses
+
+- The application is to collect information about courses, trainers and students
+
+- Menu allowing to add courses, trainers and students, modify their information, assign between each other and remove each element. Multiple trainers can lead a single course
+
+- Course cannot be deleted when students are still assigned
+
+- Maximum limit of 5 students per course
