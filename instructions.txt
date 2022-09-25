@@ -45,3 +45,7 @@
 - Course cannot be deleted when students are still assigned
 
 - Maximum limit of 5 students per course
+
+6. SQL_employees
+
+- Insert, remove, change details and search for employees in the employees.db database using SQL queries
