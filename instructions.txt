@@ -8,6 +8,7 @@
 
 - Ability to add grades and average to be displayed along with student's information when prompted
 
+
 2. Dat_operations_company.py
 
 - Operations based on 3 modules to manage companies, employees and employment
@@ -22,6 +23,12 @@
 
 - Deleting an employee from a database should not be possible if it is assigned employment
 
+
 3. GUI_calculator
 
 - A simple calculator enabling multiple computations until the data is erased
+
+
+4. 
+
+- The application is to collect information about clinics, their patients and sicknesses of the patients
