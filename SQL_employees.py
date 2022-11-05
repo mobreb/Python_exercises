@@ -1,5 +1,7 @@
 import sqlite3
 
+# Connecting to sqlite, raising an error if unsuccessful
+
 try:
     conn = sqlite3.connect(
         'employees.db'
@@ -8,8 +10,8 @@ try:
     print("connection successful!")
 except:
     raise ConnectionError('could not connect to the database')
-
-
+    
+# Add an employee to DB, confirm before commiting
 def add_employee(name, surname, salary):
     sql = f"INSERT INTO employees(name,surname,salary) VALUES ('{name}', '{surname}',{salary})"
     c.execute(sql)
@@ -24,7 +26,7 @@ def add_employee(name, surname, salary):
         conn.rollback()
         print("cancelled")
 
-
+# Pull records from DB
 def show():
     sql = "SELECT * FROM employees"
     c.execute(sql)
@@ -32,7 +34,7 @@ def show():
     for i in data:
         print(f"ID: {i[0]}, name: {i[1]}, surname: {i[2]}, salary {i[3]}")
 
-
+# Delete employee from DB by searching for employee id. Print error if employee not found.
 def delete_employee(surname):
     sql = f"SELECT * FROM employees WHERE surname = '{surname}'"
     c.execute(sql)
@@ -53,7 +55,7 @@ def delete_employee(surname):
             conn.rollback()
             print("cancelled")
 
-
+# Amend employee information stored in a list value.
 def modify(surname, value):
 
     sql = f"SELECT * FROM employees WHERE surname = '{surname}'"
@@ -76,7 +78,7 @@ def modify(surname, value):
             conn.rollback()
             print("cancelled")
 
-
+# Search employee information by either partial or full value
 def search(searched_value):
     sql = f"SELECT * FROM employees WHERE surname LIKE '%{searched_value}%' OR name LIKE '%{searched_value}%'"
     c.execute(sql)
@@ -99,11 +101,12 @@ while True:
 
     elif menu == "2":
         show()
-
+        
     elif menu == "3":
         surname = input("surname: ")
         delete_employee(surname)
-
+    
+    # Modify employees information, option to choose which value to modify
     elif menu == "4":
         value = []
         old_surname = input("employee's surname:")
@@ -117,7 +120,7 @@ while True:
             value.append(["salary", salary])
             value.append(["surname", new_surname])
             modify(old_surname, value)
-
+            
         elif change == 2:
             name = input("new name: ")
             value.append(["name", name])
@@ -130,13 +133,17 @@ while True:
             salary = input("new salary: ")
             value.append(["salary", salary])
             modify(old_surname, value)
-
+    
+    # Search employee information by partial/full value
     elif menu == "5":
         searched_value = input("searched_value phrase: ")
         search(searched_value)
+        
+    # Disconnect from DB, close program    
     elif menu == "6":
         print("quitting")
         conn.close()
         break
+    # Pass an error if option out of the list is not chosen
     else:
         print("Unknown option")
