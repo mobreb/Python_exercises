@@ -1,5 +1,7 @@
 class Patient:
-    def __init__(self, name, surname):
+    """Input name, surname: str"""
+
+    def __init__(self, name: str, surname: str):
         self.__name = name
         self.__surname = surname
         self.sickness_list = []
@@ -22,6 +24,8 @@ class Patient:
 
 
 class Clinic:
+    """Input: name of the clinic, city: str"""
+
     def __init__(self, designation, city):
         self.__designation = designation
         self.__city = city
@@ -45,44 +49,53 @@ class Clinic:
 
 
 class Menu:
+    """Controller to add, remove, modify and display information"""
+
     def __init__(self):
         self.clinic_list = []
         self.start()
 
-    def add_clinic(self, designation, city):
+    def add_clinic(self, designation: str, city: str) -> None:
+        """Add a clinic, stores values in a list. Input designation, city: str"""
         clinic = Clinic(designation, city)
         self.clinic_list.append(clinic)
 
-    def remove_clinic(self, clinic_designation):
+    def remove_clinic(self, clinic_designation: str) -> int:
+        """Remove a clinic from a list. Input: clinic name: str. Returns int 1 upon success."""
         for i in self.clinic_list:
             if i.designation == clinic_designation:
                 self.clinic_list.remove(i)
                 return 1
         print("Clinic not in the database")
 
-    def check_designation(self, designation):
+    def check_designation(self, designation: str) -> int:
+        """Check whether clinic is in the list. Input clinic name: str. Returns int 1 upon success."""
         for i in self.clinic_list:
             if i.designation == designation:
                 return 1
         print("Clinic not in the database")
 
-    def add_patient(self, name, surname, designation):
+    def add_patient(self, name: str, surname: str, designation: str):
+        """Add a patient to a patients list. Input name, surname, clinic name: str."""
         patient = Patient(name, surname)
         for i in self.clinic_list:
             if i.designation == designation:
                 i.patients_list.append(patient)
 
     def display_clinic(self):
+        """Display all clinics in the list."""
         for i in self.clinic_list:
             print(i.designation)
 
-    def display_patients(self, designation):
+    def display_patients(self, designation: str):
+        """Display all patrients of a given clinic. Input clinic name:str."""
         for i in self.clinic_list:
             if i.designation == designation:
                 for j in i.patients_list:
                     print(j.name, j.surname)
 
-    def check_surname(self, surname, designation):
+    def check_surname(self, surname: str, designation: str) -> int:
+        """Check whether a given patient is assigned to the clinic. Input surname, designation: str. Returns int 1 upon success"""
         for i in self.clinic_list:
             if i.designation == designation:
                 for j in i.patients_list:
@@ -90,14 +103,16 @@ class Menu:
                         return 1
         print("Patient not assigned to the clinic")
 
-    def add_sickness(self, surname, designation, sickness):
+    def add_sickness(self, surname: str, designation: str, sickness: str):
+        """Assign a sickness to a patient. Input surname, clinic name, sickness: str"""
         for i in self.clinic_list:
             if i.designation == designation:
                 for j in i.patients_list:
                     if j.surname == surname:
                         j.sickness_list.append(sickness)
 
-    def display_sicknesses(self, surname, designation):
+    def display_sicknesses(self, surname: str, designation: str):
+        """Display patients history. Input surname, clinic name: str"""
         for i in self.clinic_list:
             if i.designation == designation:
                 for j in i.patients_list:
@@ -116,7 +131,7 @@ class Menu:
                     )
                 )
                 if option == 1:
-                    designation = input("Clinic's name")
+                    designation = input("Clinic's name: ")
                     city = input("City: ")
                     self.add_clinic(designation, city)
 
@@ -164,4 +179,5 @@ class Menu:
                 print("Please choose out of existing options in main menu: ")
 
 
-menu = Menu()
+if __name__ == "__main__":
+    menu = Menu()
