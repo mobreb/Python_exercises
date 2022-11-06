@@ -1,5 +1,11 @@
+import re
+import datetime
+
+
 class Person:
-    def __init__(self, name, surname):
+    """Parent class, input name, surname: str"""
+
+    def __init__(self, name: str, surname: str):
         self.__name = name
         self.__surname = surname
 
@@ -21,9 +27,11 @@ class Person:
 
 
 class Student(Person):
-    def __init__(self, name, surname, email):
+    """Student representation. Input name, surname: str, email: email format - must contain @ and ."""
+
+    def __init__(self, name: str, surname: str, email: str):
         super().__init__(name, surname)
-        self.__email = email
+        self.email = email
 
     @property
     def email(self):
@@ -31,11 +39,16 @@ class Student(Person):
 
     @email.setter
     def email(self, email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if not re.fullmatch(regex, email):
+            raise TypeError("Email not valid")
         self.__email = email
 
 
 class Trainer(Person):
-    def __init__(self, name, surname, specialization):
+    """Input name, surname, specialization: str"""
+
+    def __init__(self, name: str, surname: str, specialization: str):
         super().__init__(name, surname)
         self.__specialization = specialization
 
@@ -49,10 +62,11 @@ class Trainer(Person):
 
 
 class Course:
-    def __init__(self, label, city, timeslot):
+    """Input label (name), city: str, timeslot: date in 'dd-mm-yyyy' format"""
+    def __init__(self, label: str, city: str, timeslot: "datetime date"):
         self.__label = label
         self.__place = city
-        self.__timeslot = timeslot
+        self.timeslot = timeslot
         self.trainer_list = []
         self.student_list = []
 
@@ -74,7 +88,8 @@ class Course:
 
     @timeslot.setter
     def timeslot(self, timeslot):
-        self.__timeslot = timeslot
+        if datetime.datetime.strptime(timeslot, '%d-%m-%Y'):
+            self.__timeslot = timeslot
 
     @place.setter
     def place(self, city):
@@ -82,42 +97,51 @@ class Course:
 
 
 class ControllerCourse:
+    """Course controller to add, delete and modify information within the course."""
     def __init__(self):
         self.course_dict = {}
 
-    def add_course(self, label, place, timeslot):
+    def add_course(self, label: str, place: str, timeslot: "datetime date") -> None:
+        """Adding course to a dict. Input label, city: str, timeslot in a 'dd-mm-yyyy' format."""
         course = Course(label, place, timeslot)
         self.course_dict[label] = course
 
-    def add_trainer(self, name, surname, specialization, label):
+    def add_trainer(
+            self, name: str, surname: str, specialization: str, label: str) -> None:
+        """Adding teacher to a dict. Input: name, surname, specialization:str"""
         trainer = Trainer(name, surname, specialization)
         self.course_dict[label].trainer_list.append(trainer)
 
-    def add_student(self, name, surname, email, label):
+    def add_student(self, name: str, surname: str, email: str, label: str) -> None:
+        """Adding student to a dict. Input name, surname:str, email: str containing @ and ., and label: str"""
         student = Student(name, surname, email)
         self.course_dict[label].student_list.append(student)
 
-    def check_students(self, label):
+    def check_students(self, label: str) -> int:
+        """Checking criteria of student limit. Input label:str Return int -> 1 for positive result, 2 for negative"""
         if len(self.course_dict[label].student_list) < 5:
             return 1
         else:
             print("Course is already full - 5 participants limit")
             return 2
 
-    def delete_trainer(self, surname, label):
+    def delete_trainer(self, surname: str, label: str) -> None:
+        """Delete a trainer. Input surname: str"""
         for i in self.course_dict[label].trainer_list:
             if i.surname == surname:
                 self.course_dict[label].trainer_list.remove(i)
                 print(f"Trainer {i.surname} was removed from the course")
                 break
 
-    def delete_student(self, surname, label):
+    def delete_student(self, surname: str, label: str) -> None:
+        """Delete a student from a course. Input surname, label: str"""
         for i in self.course_dict[label].student_list:
             if i.surname == surname:
                 self.course_dict[label].student_list.remove(i)
                 print(f"Student {i.surname} was removed")
 
-    def delete_course(self, course):
+    def delete_course(self, course: str) -> None:
+        """Delete a course if no active students exist. Input course: str"""
         if len(self.course_dict[course].student_list) == 0:
             self.course_dict.pop(course)
             print(f"Course {course} was deleted")
@@ -126,7 +150,8 @@ class ControllerCourse:
                 "There are active student accounts under the course, unable to delete."
             )
 
-    def check_surname(self, surname, person, label):
+    def check_surname(self, surname: str, person: str, label: str) -> int:
+        """Check whether a given surname exists in the dict. Input surname,function (trainer or student), label:str """
         if person == "trainer":
             if len(self.course_dict[label].trainer_list) == 0:
                 print("Lack of trainers assigned to the course")
@@ -148,7 +173,15 @@ class ControllerCourse:
 
         print("Surname not found")
 
-    def modify_student(self, new_name, new_surname, new_email, old_surname, label):
+    def modify_student(
+            self,
+            new_name: str,
+            new_surname: str,
+            new_email: str,
+            old_surname: str,
+            label: str,
+    ) -> None:
+        """Modify student information. name, surname, email (must contain @ and .), old surname, label: str."""
         for i in self.course_dict[label].student_list:
             if i.surname == old_surname:
                 i.name = new_name
@@ -156,12 +189,14 @@ class ControllerCourse:
                 i.email = new_email
                 break
 
-    def modify_course(self, new_label, city, new_timeslot, course_label):
+    def modify_course(self,new_label: str,city: str,new_timeslot: "datetime date",course_label: str,) -> None:
+        """Modify course details. label, city:str, timeslot: str in dd-mm-yyyy format, course label:str"""
         self.course_dict[course_label].label = new_label
         self.course_dict[course_label].place = city
         self.course_dict[course_label].timeslot = new_timeslot
 
     def display_course(self):
+        """Display course details"""
         for course in self.course_dict:
             print(
                 f"course {self.course_dict[course].label}, in city {self.course_dict[course].place} at {self.course_dict[course].timeslot}"
@@ -174,7 +209,8 @@ class ControllerCourse:
                 print(f"{j.name} {j.surname}")
             print("")
 
-    def check_label(self, label):
+    def check_label(self, label: str) -> int:
+        """Validate whether course name exists in dictionary. Input label:str. Returns int: 1 for positive result, 2 for negative"""
         if label in self.course_dict:
             return 1
 
@@ -184,7 +220,8 @@ class ControllerCourse:
 
 
 class School(ControllerCourse):
-    def __init__(self, label):
+    """School controller. Input school name: str"""
+    def __init__(self, label: str):
         super().__init__()
         self.__label = label
         self.menu()
@@ -227,8 +264,8 @@ class School(ControllerCourse):
                 )
                 if self.check_label(label) == 1:
                     if self.check_students(label) == 1:
-                        name = input("Student's name")
-                        surname = input("Student's surname")
+                        name = input("Student's name: ")
+                        surname = input("Student's surname: ")
                         email = input("Student's email: ")
                         self.add_student(name, surname, email, label)
 
@@ -240,7 +277,7 @@ class School(ControllerCourse):
                         self.delete_trainer(surname, label)
 
             elif menu == 5:
-                label = input("Course from which the student should be removed from:")
+                label = input("Course from which the student should be removed from: ")
                 if self.check_label(label) == 1:
                     surname = input("Surname of the student pending removal: ")
                     if self.check_surname(surname, "student", label) == 1:
@@ -279,4 +316,5 @@ class School(ControllerCourse):
                 print("Incorrect choice")
 
 
-school = School(input("School name: "))
+if __name__ == "__main__":
+    school = School(input("School name: "))
