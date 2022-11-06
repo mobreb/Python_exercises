@@ -1,14 +1,17 @@
 import os
+from typing import List
 
 
-def add_student(name, surname, group):
+def add_student(name: str, surname: str, group: str) -> None:
+    """Add a student to a text file"""
     file = open("Student_list.txt", "a", encoding="utf8")
     file.write(f"{name};{surname};{group}\n")
     file.close()
 
 
 def show_students():
-    if os.path.isfile("Student_list.txt") == False:
+    """Print out all students if records exist."""
+    if os.path.isfile("Student_list.txt") is False:
         print("add a student to the list first")
     else:
 
@@ -34,7 +37,8 @@ def show_students():
         file.close()
 
 
-def delete_student(surname):
+def delete_student(surname: str) -> None:
+    """Delete a student. Input surname: str"""
     aid = []
     file_r = open("Student_list.txt", "r", encoding="utf8")
     for i in file_r:
@@ -48,7 +52,8 @@ def delete_student(surname):
     file_w.close()
 
 
-def change_details(surname, new_name, new_surname):
+def change_details(surname: str, new_name: str, new_surname: str) -> None:
+    """Append student records. Input surname, new name, new surname: str"""
     aid = []
     file_r = open("Student_list.txt", "r", encoding="utf8")
     for i in file_r:
@@ -64,8 +69,9 @@ def change_details(surname, new_name, new_surname):
     file_w.close()
 
 
-def check(surname):
-    if os.path.isfile("Student_list.txt") == False:
+def check(surname: str) -> int:
+    """Check whether surname is in the text file. Return int 1 upon success, otherwise return int 2"""
+    if os.path.isfile("Student_list.txt") is False:
         print("add a student to the list first")
         return 2
     else:
@@ -77,7 +83,8 @@ def check(surname):
                 return 1
 
 
-def grade(name, surname, grades):
+def grade(name: str, surname: str, grades: List[int]):
+    """Assign grades to a student. Input name, surname:str and grades: a list of ints"""
     students = []
     file_r = open("Student_list.txt", "r", encoding="utf8")
     for i, y in enumerate(file_r):
