@@ -12,8 +12,7 @@ except:
 
 def add_employee(name: str, surname: str, salary: int) -> None:
     """Add an employee to DB by providing name, surname and salary Confirm before committing."""
-    sql = f"INSERT INTO employees(name,surname,salary) VALUES ('{name}', '{surname}',{salary})"
-    c.execute(sql)
+    c.execute("INSERT INTO employees(name,surname,salary) VALUES (?,?,?)", (name, surname, salary))
 
     dec = input("add input to the database? T/N: ").upper()
 
@@ -37,8 +36,7 @@ def show():
 
 def delete_employee(employee_surname: str, employee_id: str) -> None:
     """Delete employee from DB by searching for employee id. Print error if employee not found."""
-    sql = f"DELETE FROM employees WHERE employeeid = '{employee_id}'"
-    c.execute(sql)
+    c.execute("DELETE FROM employees WHERE employeeid = ?", (employee_id,))
 
     dec = input("delete employee? T/N: ").upper()
 
@@ -54,10 +52,10 @@ def delete_employee(employee_surname: str, employee_id: str) -> None:
 def modify(employee_id: str, value: list) -> None:
     """Amend employee information. Takes in employee_id and a list containing column and value to be modified."""
     for i in value:
-        sql = (
-            f"UPDATE employees SET {i[0]} = '{i[1]}' WHERE employeeid = '{employee_id}'"
-        )
-        c.execute(sql)
+        print(i[0])
+        print(i[1])
+        print(employee_id)
+        c.execute(f"UPDATE employees SET {i[0]} = ? WHERE employeeid = ?", (i[1], employee_id))
 
     dec = input("modify database? T/N: ").upper()
 
@@ -72,8 +70,7 @@ def modify(employee_id: str, value: list) -> None:
 
 def search(searched_value: str) -> None:
     """Input: partial/full name or surname as a string."""
-    sql = f"SELECT * FROM employees WHERE surname LIKE '%{searched_value}%' OR name LIKE '%{searched_value}%'"
-    c.execute(sql)
+    c.execute("SELECT * FROM employees WHERE surname LIKE ? OR name LIKE ?", ('%'+searched_value+'%', '%'+searched_value+'%'))
     data = c.fetchall()
     if data:
         for i in data:
@@ -84,8 +81,7 @@ def search(searched_value: str) -> None:
 
 def check_surname(surname: str) -> str:
     """Ensure the employee is a member of the DB. Input surname, return employee id"""
-    sql = f"SELECT * FROM employees WHERE surname = '{surname}'"
-    c.execute(sql)
+    c.execute("SELECT * FROM employees WHERE surname=?", (surname,))
     data = c.fetchall()
     if not data:
         raise ValueError("Employee not found")
